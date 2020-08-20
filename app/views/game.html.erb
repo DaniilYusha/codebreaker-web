@@ -47,7 +47,6 @@
               </div>
             </div>
             <hr class="mb-4">
-            <%= game.secret_code %>
             <form method="post" action="/submit_answer">
               <div class="form-group">
                 <input class="form-control guess_input" name="number" pattern="^[1-6]{4}$" maxlength="4" placeholder="1234" required="" autocomplete="off">
