@@ -20,3 +20,39 @@ en:
   game. If all attempts are spent - codebreaker loses.
   * Codebreaker also has some number of hints(depends on chosen difficulty). If a user takes
   a hint - he receives back a separate digit of the secret code."
+  page_title: 'Codebreaker Web'
+  short_rules: 'Try to guess 4-digit number, that consists of numbers in a range from 1 to 6.'
+  player_name_label: "Player's name:"
+  name_placeholder: 'Your name'
+  difficulty_label: 'Game level:'
+  choose_level: 'Choose game level...'
+  levels:
+    easy: 'Easy'
+    medium: 'Medium'
+    hell: 'Hell'
+  buttons:
+    start_game: 'Start the game!'
+    submit: 'Submit'
+  links:
+    rules: 'Rules'
+    statistics: 'Statistics'
+    home: 'Home'
+    hint: 'Show hint!'
+    play_again: 'Play again!'
+  top_players: 'Top of Players:'
+  statistics_header:
+    name: 'Name'
+    level: 'Level'
+    attempts_left: 'Attempts Left'
+    hints_left: 'Hints Left'
+    date: 'Data'
+  no_stats: 'There are no winners yet! Be the first!'
+  greeting: "Hello, %{name}! Try to guess 4-digit number, that consists of numbers in a range from 1 to 6."
+  level: 'Level:'
+  attempts: 'Attempts:'
+  attempts_left: 'Attempts Left:'
+  hints: 'Hints:'
+  hints_left: 'Hints Left:'
+  loose: "Oops, %{name}! You lose the game!"
+  win: "Congratulations, %{name}! You won the game!"
+  code: 'The code was'

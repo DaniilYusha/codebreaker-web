@@ -7,7 +7,7 @@
 <link href="assets/css/styles.css" rel="stylesheet">
 <script src="assets/js/jquery.min.js"></script>
 <script src="assets/js/bootstrap.min.js"></script>
-<title>Codebreaker Web</title>
+<title><%= I18n.t :page_title %></title>
 
 <body>
   <section id="introduction">
@@ -16,25 +16,25 @@
         <div class="col-12 col-md-6">
           <div class="row">
             <div class="col-md-auto">
-              <h1 class="text-white title inline-block">Codebreaker 2018</h1>
+              <h1 class="text-white title inline-block"><%= I18n.t :page_title %></h1>
             </div>
           </div>
           <div class="row">
             <div class="col button">
               <button type="button" class="btn btn-primary" disabled>
-                Level:
+                <%= I18n.t :level %>
                 <span class="badge badge-light">
                   <%= game.difficulty.kind %>
                 </span>
               </button>
               <button type="button" class="btn btn-primary" disabled>
-                Attempts Left:
+                <%= I18n.t :attempts_left %>
                 <span class="badge badge-light">
                   <%= "#{game.difficulty.current_attempts}/#{game.difficulty.attempts}" %>
                 </span>
               </button>
               <button type="button" class="btn btn-primary" disabled>
-                Hints Left:
+                <%= I18n.t :hints_left %>
                 <span class="badge badge-light">
                   <%= "#{game.difficulty.current_hints}/#{game.difficulty.hints}" %>
                 </span>
@@ -46,7 +46,7 @@
             <div class="text-center">
               <div class="text-center">
                 <h3 class="text-white">
-                  Congratulations, <%= game.user.name %>! You won the game!
+                  <%= I18n.t :win, name: game.user.name %>
                 </h3>
               </div>
               <img src="assets/images/won.gif" class="img-fluid" alt="You won the game!">
@@ -54,10 +54,10 @@
           </div>
           <hr class="mb-4">
           <a class="btn btn-primary btn-lg" href="/play_again" role="button">
-            Play again!
+            <%= I18n.t('links.play_again') %>
           </a>
           <a class="btn btn-success btn-lg float-right" href="/statistics" role="button">
-            Statistics
+            <%= I18n.t('links.statistics') %>
           </a>
         </div>
        </div>
