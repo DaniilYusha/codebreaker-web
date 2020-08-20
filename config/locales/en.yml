@@ -56,3 +56,4 @@ en:
   loose: "Oops, %{name}! You lose the game!"
   win: "Congratulations, %{name}! You won the game!"
   code: 'The code was'
+  not_found: 'Not Found'

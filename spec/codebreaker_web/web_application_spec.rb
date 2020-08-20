@@ -23,7 +23,7 @@ RSpec.describe CodebreakerWeb::WebApplication do
     end
 
     it 'returns 404 page' do
-      expect(page).to have_content 'Not Found'
+      expect(page).to have_content I18n.t(:not_found)
     end
   end
 
@@ -35,7 +35,7 @@ RSpec.describe CodebreakerWeb::WebApplication do
     end
 
     it 'show short game rules' do
-      expect(page).to have_content 'Try to guess 4-digit number, that consists of numbers in a range from 1 to 6.'
+      expect(page).to have_content I18n.t :short_rules
     end
 
     context 'with trying go to game page' do
@@ -72,7 +72,7 @@ RSpec.describe CodebreakerWeb::WebApplication do
     end
 
     it "has 'Home' link" do
-      expect(page).to have_link 'Home'
+      expect(page).to have_link I18n.t('links.home')
     end
   end
 
@@ -84,15 +84,15 @@ RSpec.describe CodebreakerWeb::WebApplication do
     end
 
     it 'show table header' do
-      expect(page).to have_content 'Top of Players:'
+      expect(page).to have_content I18n.t(:top_players)
     end
 
     it 'show message about no stats' do
-      expect(page).to have_content 'There are no winners yet! Be the first!'
+      expect(page).to have_content I18n.t(:no_stats)
     end
 
     it "has 'Home' link" do
-      expect(page).to have_link 'Home'
+      expect(page).to have_link I18n.t('links.home')
     end
   end
 
@@ -101,7 +101,7 @@ RSpec.describe CodebreakerWeb::WebApplication do
       visit '/'
       fill_in 'player_name', with: user.name
       select difficulty.kind.to_s.capitalize, from: 'level'
-      click_button 'Start the game!'
+      click_button I18n.t('buttons.start_game')
     end
 
     after { File.delete OVERRIDABLE_GAME_PATH }
@@ -112,27 +112,27 @@ RSpec.describe CodebreakerWeb::WebApplication do
       end
 
       it 'show greeting message' do
-        expect(page).to have_content "Hello, #{user.name}!"
+        expect(page).to have_content I18n.t(:greeting, name: user.name)
       end
 
       it 'show difficulty' do
-        expect(page).to have_content "Level: #{difficulty.kind}"
+        expect(page).to have_content difficulty.kind
       end
 
       it 'show current attempts count' do
-        expect(page).to have_content "Attempts: #{difficulty.current_attempts}"
+        expect(page).to have_content difficulty.current_attempts
       end
 
       it 'show current hints count' do
-        expect(page).to have_content "Hints: #{difficulty.current_hints}"
+        expect(page).to have_content difficulty.current_hints
       end
 
       it "has 'Show hint!' link" do
-        expect(page).to have_link 'Show hint!'
+        expect(page).to have_link I18n.t('links.hint')
       end
 
       it "has 'Submit' button" do
-        expect(page).to have_button 'Submit'
+        expect(page).to have_button I18n.t('buttons.submit')
       end
     end
   end
@@ -144,7 +144,7 @@ RSpec.describe CodebreakerWeb::WebApplication do
       File.open(OVERRIDABLE_GAME_PATH, 'w') { |f| f.write game.to_yaml }
       visit '/game'
       fill_in('number', with: code)
-      click_button 'Submit'
+      click_button I18n.t('buttons.submit')
     end
 
     after { File.delete OVERRIDABLE_GAME_PATH }
@@ -154,7 +154,7 @@ RSpec.describe CodebreakerWeb::WebApplication do
     end
 
     it 'change attempts count by 1' do
-      expect(page).to have_content "Attempts: #{difficulty.current_attempts - 1}"
+      expect(page).to have_content(difficulty.current_attempts - 1)
     end
   end
 
@@ -162,7 +162,7 @@ RSpec.describe CodebreakerWeb::WebApplication do
     before do
       File.open(OVERRIDABLE_GAME_PATH, 'w') { |f| f.write game.to_yaml }
       visit '/game'
-      click_link 'Show hint!'
+      click_link I18n.t('links.hint')
     end
 
     after { File.delete OVERRIDABLE_GAME_PATH }
@@ -172,7 +172,7 @@ RSpec.describe CodebreakerWeb::WebApplication do
     end
 
     it 'change honts count by 1' do
-      expect(page).to have_content "Hints: #{difficulty.current_hints - 1}"
+      expect(page).to have_content(difficulty.current_hints - 1)
     end
   end
 
@@ -184,7 +184,7 @@ RSpec.describe CodebreakerWeb::WebApplication do
       File.open(OVERRIDABLE_GAME_PATH, 'w') { |f| f.write game.to_yaml }
       visit '/game'
       fill_in('number', with: code)
-      click_button 'Submit'
+      click_button I18n.t('buttons.submit')
     end
 
     after { File.delete OVERRIDABLE_GAME_PATH }
@@ -198,7 +198,7 @@ RSpec.describe CodebreakerWeb::WebApplication do
     end
 
     it 'show lose message' do
-      expect(page).to have_content "Oops, #{user.name}! You lose the game!"
+      expect(page).to have_content(I18n.t :loose, name: user.name)
     end
 
     it 'show difficulty' do
@@ -216,15 +216,15 @@ RSpec.describe CodebreakerWeb::WebApplication do
     end
 
     it 'show secret code' do
-      expect(page).to have_content "The code was #{game.secret_code.join}"
+      expect(page).to have_content "#{I18n.t(:code)} #{game.secret_code.join}"
     end
 
     it 'has play again link' do
-      expect(page).to have_link 'Play again!'
+      expect(page).to have_link I18n.t('links.play_again')
     end
 
     it 'has statistics link' do
-      expect(page).to have_link 'Statistics'
+      expect(page).to have_link I18n.t('links.statistics')
     end
   end
 
@@ -235,7 +235,7 @@ RSpec.describe CodebreakerWeb::WebApplication do
       File.open(OVERRIDABLE_GAME_PATH, 'w') { |f| f.write game.to_yaml }
       visit '/game'
       fill_in('number', with: success_code)
-      click_button 'Submit'
+      click_button I18n.t('buttons.submit')
     end
 
     after { File.delete OVERRIDABLE_GAME_PATH }
@@ -257,7 +257,7 @@ RSpec.describe CodebreakerWeb::WebApplication do
     end
 
     it 'show congratulations message' do
-      expect(page).to have_content "Congratulations, #{user.name}! You won the game!"
+      expect(page).to have_content(I18n.t :win, name: user.name)
     end
 
     it 'show difficulty' do
@@ -275,11 +275,11 @@ RSpec.describe CodebreakerWeb::WebApplication do
     end
 
     it 'has play again link' do
-      expect(page).to have_link 'Play again!'
+      expect(page).to have_link I18n.t('links.play_again')
     end
 
     it 'has statistics link' do
-      expect(page).to have_link 'Statistics'
+      expect(page).to have_link I18n.t('links.statistics')
     end
   end
 
@@ -290,8 +290,8 @@ RSpec.describe CodebreakerWeb::WebApplication do
       File.open(OVERRIDABLE_GAME_PATH, 'w') { |f| f.write game.to_yaml }
       visit '/game'
       fill_in('number', with: success_code)
-      click_button 'Submit'
-      click_link 'Play again!'
+      click_button I18n.t('buttons.submit')
+      click_link I18n.t('links.play_again')
     end
 
     after { File.delete OVERRIDABLE_GAME_PATH }
@@ -305,7 +305,7 @@ RSpec.describe CodebreakerWeb::WebApplication do
     end
 
     it 'clear hint button' do
-      expect(page).to have_link 'Show hint!'
+      expect(page).to have_link I18n.t('links.hint')
     end
   end
 end

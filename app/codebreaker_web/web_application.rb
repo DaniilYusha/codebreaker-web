@@ -32,7 +32,7 @@ module CodebreakerWeb
 
     def response
       path = @request.path
-      ACTIONS.include?(path) ? send(ACTIONS[path]) : Rack::Response.new('Not Found', 404)
+      ACTIONS.include?(path) ? send(ACTIONS[path]) : Rack::Response.new(I18n.t(:not_found), 404)
     end
 
     def menu
