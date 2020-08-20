@@ -198,7 +198,7 @@ RSpec.describe CodebreakerWeb::WebApplication do
     end
 
     it 'show lose message' do
-      expect(page).to have_content(I18n.t :loose, name: user.name)
+      expect(page).to have_content(I18n.t(:loose, name: user.name))
     end
 
     it 'show difficulty' do
@@ -257,7 +257,7 @@ RSpec.describe CodebreakerWeb::WebApplication do
     end
 
     it 'show congratulations message' do
-      expect(page).to have_content(I18n.t :win, name: user.name)
+      expect(page).to have_content(I18n.t(:win, name: user.name))
     end
 
     it 'show difficulty' do
