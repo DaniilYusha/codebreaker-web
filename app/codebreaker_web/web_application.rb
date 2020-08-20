@@ -35,6 +35,8 @@ module CodebreakerWeb
       ACTIONS.include?(path) ? send(ACTIONS[path]) : Rack::Response.new(I18n.t(:not_found), 404)
     end
 
+    private
+
     def menu
       return redirect '/game' if game_present?
 
@@ -106,8 +108,6 @@ module CodebreakerWeb
       save_game @game
       redirect '/game'
     end
-
-    private
 
     def send_respond(view, **args)
       Rack::Response.new(render(view, **args))
