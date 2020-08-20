@@ -1,6 +1,7 @@
-module Middlewares
+module CodebreakerWeb
   class WebApplication
     include DataManagementHelper
+    include GameStorageHepler
 
     attr_reader :statistics
 
@@ -25,7 +26,7 @@ module Middlewares
     def initialize(env)
       @request = Rack::Request.new(env)
       @statistics = Codebreaker::StatisticsService.new FILE_PATH
-      @game = @request.session[:game]
+      @game = load_game
       @hints = @request.session[:hints].nil? ? [] : @request.session[:hints]
     end
 
@@ -35,7 +36,7 @@ module Middlewares
     end
 
     def menu
-      return redirect '/game' if session_present?
+      return redirect '/game' if game_present?
 
       send_respond 'menu'
     end
@@ -44,63 +45,65 @@ module Middlewares
       user = Codebreaker::User.new get_param('player_name')
       difficulty = Codebreaker::Difficulty.new get_param('level')
       @game = Codebreaker::Game.new(user, difficulty)
-      @request.session[:game] = @game
+      save_game @game
       redirect('/game')
     end
 
     def game
-      return redirect '/' unless session_present?
+      return redirect '/' unless game_present?
       return redirect '/lose' if @game.lose?
       return redirect '/win' if @game.win? @request.session[:number]
 
-      send_respond 'game', game: session_param(:game), result: session_param(:result), hints: session_param(:hints)
+      send_respond 'game', game: load_game, result: session_param(:result), hints: session_param(:hints)
     end
 
     def check_guess
       @request.session[:number] = get_param('number')
       @result = @game.check_attempt get_param('number')
       @request.session[:result] = @result
+      save_game @game
       redirect '/game'
     end
 
     def show_hint
       @hints << @game.take_hint
       @request.session[:hints] = @hints
+      save_game @game
       redirect '/game'
     end
 
     def lose
-      return redirect '/' unless session_present?
+      return redirect '/' unless game_present?
       return redirect '/game' unless @game.lose?
 
-      send_respond 'lose', game: @request.session[:game]
+      send_respond 'lose', game: @game
     end
 
     def win
-      return redirect '/' unless session_present?
+      return redirect '/' unless game_present?
       return redirect '/game' unless @game.win? @request.session[:number]
 
       statistics.store @game
-      send_respond 'win', game: @request.session[:game]
+      send_respond 'win', game: @game
     end
 
     def show_rules
-      return redirect '/game' if session_present?
+      return redirect '/game' if game_present?
 
       send_respond 'rules'
     end
 
     def show_statistics
-      sesssion_die if @game&.lose? || @game&.win?(@request.session[:number])
-      return redirect '/game' if session_present?
+      clear_data if @game&.lose? || @game&.win?(@request.session[:number])
+      return redirect '/game' if game_present?
 
       send_respond 'statistics', statistics: statistics.load
     end
 
     def play_again
-      sesssion_die
+      clear_data
       @game.new_game
-      @request.session[:game] = @game
+      save_game @game
       redirect '/game'
     end
 
