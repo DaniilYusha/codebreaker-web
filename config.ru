@@ -6,4 +6,4 @@ use Rack::Session::Cookie, key: 'rack.session',
                            secret: 'secret',
                            old_secret: 'old_secret'
 
-run Middlewares::WebApplication
+run CodebreakerWeb::WebApplication
