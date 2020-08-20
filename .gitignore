@@ -1,4 +1,4 @@
 .history
 .DS_Store
 coverage
-app/db/statistics.yml
+app/db
