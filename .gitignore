@@ -3,3 +3,4 @@
 coverage
 app/db/statistics.yml
 app/db/game.yml
+node_modules
