@@ -22,6 +22,13 @@ module CodebreakerWeb
       new(env).response.finish
     end
 
+    def response
+      path = @request.path
+      ACTIONS.include?(path) ? send(ACTIONS[path]) : Rack::Response.new(I18n.t(:not_found), 404)
+    end
+
+    private
+
     def initialize(env)
       @request = Rack::Request.new(env)
       @statistics = Codebreaker::StatisticsService.new FILE_PATH
@@ -29,13 +36,6 @@ module CodebreakerWeb
       @game = load_game(@game_path)
       @hints = @request.session[:hints].nil? ? [] : @request.session[:hints]
     end
-
-    def response
-      path = @request.path
-      ACTIONS.include?(path) ? send(ACTIONS[path]) : Rack::Response.new(I18n.t(:not_found), 404)
-    end
-
-    private
 
     def menu
       return redirect '/game' if game_present? @game_path
