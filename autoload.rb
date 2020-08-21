@@ -1,3 +1,6 @@
+require 'bundler'
+Bundler.setup
+
 require 'i18n'
 require 'erb'
 require 'yaml'
