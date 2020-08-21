@@ -3,7 +3,7 @@ version: 2.1
 executors:
   default:
     working_directory: ~/repo
-    description: Refactoring
+    description: CodebreakerWeb
     docker:
       - image: circleci/ruby:2.7.1
 
