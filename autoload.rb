@@ -1,5 +1,5 @@
 require 'bundler'
-# Bundler.setup(:development)
+Bundler.setup
 
 require 'i18n'
 require 'erb'
