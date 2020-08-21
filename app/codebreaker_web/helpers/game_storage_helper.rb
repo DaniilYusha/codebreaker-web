@@ -1,26 +1,37 @@
 module CodebreakerWeb
   module GameStorageHepler
-    GAME_PATH = './app/db/game.yml'.freeze
+    DIRECTORY_PATH = './app/db'.freeze
+    FILE_PATH = './app/db/statistics.yml'.freeze
 
-    def load_game
-      File.exist?(GAME_PATH) ? YAML.load_file(GAME_PATH) : nil
+    def load_game(filename)
+      return nil if filename.nil?
+
+      YAML.load_file(path_to_game(filename))
     end
 
-    def save_game(game)
-      File.open(GAME_PATH, 'w') { |f| f.write game.to_yaml }
+    def save_game(game, filename)
+      File.open(path_to_game(filename), 'w') { |f| f.write game.to_yaml }
     end
 
-    def remove_game
-      File.delete GAME_PATH
+    def generate_file_name
+      "game_#{8.times.map { rand(10) }.join}.yml"
     end
 
-    def game_present?
-      !load_game.nil?
+    def remove_game(filename)
+      File.delete path_to_game(filename)
     end
 
-    def clear_data
-      remove_game
+    def game_present?(filename)
+      !!load_game(filename)
+    end
+
+    def clear_data(filename)
+      remove_game filename
       session_die
+    end
+
+    def path_to_game(filename)
+      File.join(DIRECTORY_PATH, filename)
     end
   end
 end

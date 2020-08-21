@@ -5,7 +5,6 @@ module CodebreakerWeb
 
     attr_reader :statistics
 
-    FILE_PATH = './app/db/statistics.yml'.freeze
     ACTIONS = {
       '/' => :menu,
       '/registration' => :registrate_game,
@@ -26,7 +25,8 @@ module CodebreakerWeb
     def initialize(env)
       @request = Rack::Request.new(env)
       @statistics = Codebreaker::StatisticsService.new FILE_PATH
-      @game = load_game
+      @game_path = @request.session[:game_path]
+      @game = load_game(@game_path)
       @hints = @request.session[:hints].nil? ? [] : @request.session[:hints]
     end
 
@@ -38,51 +38,54 @@ module CodebreakerWeb
     private
 
     def menu
-      return redirect '/game' if game_present?
+      return redirect '/game' if game_present? @game_path
 
       send_respond 'menu'
     end
 
     def registrate_game
+      @game_path = generate_file_name
+      @request.session[:game_path] = @game_path
       user = Codebreaker::User.new get_param('player_name')
       difficulty = Codebreaker::Difficulty.new get_param('level')
       @game = Codebreaker::Game.new(user, difficulty)
-      save_game @game
+      save_game @game, @game_path
       redirect('/game')
     end
 
     def game
-      return redirect '/' unless game_present?
+      return redirect '/' unless game_present? @game_path
       return redirect '/lose' if @game.lose?
       return redirect '/win' if @game.win? @request.session[:number]
 
-      send_respond 'game', game: load_game, result: session_param(:result), hints: session_param(:hints)
+      send_respond('game', game: load_game(@game_path),
+                           result: session_param(:result), hints: session_param(:hints))
     end
 
     def check_guess
       @request.session[:number] = get_param('number')
       @result = @game.check_attempt get_param('number')
       @request.session[:result] = @result
-      save_game @game
+      save_game @game, @game_path
       redirect '/game'
     end
 
     def show_hint
       @hints << @game.take_hint
       @request.session[:hints] = @hints
-      save_game @game
+      save_game @game, @game_path
       redirect '/game'
     end
 
     def lose
-      return redirect '/' unless game_present?
+      return redirect '/' unless game_present? @game_path
       return redirect '/game' unless @game.lose?
 
       send_respond 'lose', game: @game
     end
 
     def win
-      return redirect '/' unless game_present?
+      return redirect '/' unless game_present? @game_path
       return redirect '/game' unless @game.win? @request.session[:number]
 
       statistics.store @game
@@ -90,22 +93,21 @@ module CodebreakerWeb
     end
 
     def show_rules
-      return redirect '/game' if game_present?
+      return redirect '/game' if game_present? @game_path
 
       send_respond 'rules'
     end
 
     def show_statistics
-      clear_data if @game&.lose? || @game&.win?(@request.session[:number])
-      return redirect '/game' if game_present?
+      clear_data(@game_path) if @game&.lose? || @game&.win?(@request.session[:number])
 
       send_respond 'statistics', statistics: statistics.load
     end
 
     def play_again
-      clear_data
+      @request.session[:hints], @request.session[:result] = nil
       @game.new_game
-      save_game @game
+      save_game @game, @game_path
       redirect '/game'
     end
 

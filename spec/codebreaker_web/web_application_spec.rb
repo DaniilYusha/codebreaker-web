@@ -8,9 +8,11 @@ RSpec.describe CodebreakerWeb::WebApplication do
 
   before do
     stub_const('OVERRIDABLE_FILE_PATH', 'spec/fixtures/statistics_test.yml')
-    stub_const('OVERRIDABLE_GAME_PATH', 'spec/fixtures/game_test.yml')
+    stub_const('OVERRIDABLE_DIRECTORY_PATH', 'spec/fixtures')
+    stub_const('TEST_GAME_FILE', 'test_game.yml')
+    stub_const('TEST_GAME_PATH', "spec/fixtures/#{TEST_GAME_FILE}")
     stub_const('CodebreakerWeb::WebApplication::FILE_PATH', OVERRIDABLE_FILE_PATH)
-    stub_const('CodebreakerWeb::GameStorageHepler::GAME_PATH', OVERRIDABLE_GAME_PATH)
+    stub_const('CodebreakerWeb::GameStorageHepler::DIRECTORY_PATH', OVERRIDABLE_DIRECTORY_PATH)
   end
 
   after { File.delete(OVERRIDABLE_FILE_PATH) if File.exist?(OVERRIDABLE_FILE_PATH) }
@@ -77,6 +79,8 @@ RSpec.describe CodebreakerWeb::WebApplication do
   end
 
   context "when move to '/statistics'" do
+    let(:success_code) { game.secret_code.join }
+
     before { visit '/statistics' }
 
     it 'returns 200 code status' do
@@ -104,7 +108,7 @@ RSpec.describe CodebreakerWeb::WebApplication do
       click_button I18n.t('buttons.start_game')
     end
 
-    after { File.delete OVERRIDABLE_GAME_PATH }
+    after { File.delete(File.join(OVERRIDABLE_DIRECTORY_PATH, page.get_rack_session['game_path'])) }
 
     context 'when game registrated' do
       it 'returns 200 code page' do
@@ -141,13 +145,14 @@ RSpec.describe CodebreakerWeb::WebApplication do
     let(:code) { '6543' }
 
     before do
-      File.open(OVERRIDABLE_GAME_PATH, 'w') { |f| f.write game.to_yaml }
+      File.open(TEST_GAME_PATH, 'w') { |f| f.write game.to_yaml }
+      page.set_rack_session(game_path: TEST_GAME_FILE)
       visit '/game'
       fill_in('number', with: code)
       click_button I18n.t('buttons.submit')
     end
 
-    after { File.delete OVERRIDABLE_GAME_PATH }
+    after { File.delete TEST_GAME_PATH }
 
     it 'returns 200 code page' do
       expect(status_code).to be 200
@@ -160,12 +165,13 @@ RSpec.describe CodebreakerWeb::WebApplication do
 
   context 'when take hint' do
     before do
-      File.open(OVERRIDABLE_GAME_PATH, 'w') { |f| f.write game.to_yaml }
+      File.open(TEST_GAME_PATH, 'w') { |f| f.write game.to_yaml }
+      page.set_rack_session(game_path: TEST_GAME_FILE)
       visit '/game'
       click_link I18n.t('links.hint')
     end
 
-    after { File.delete OVERRIDABLE_GAME_PATH }
+    after { File.delete TEST_GAME_PATH }
 
     it 'returns the status 200' do
       expect(status_code).to be 200
@@ -181,13 +187,14 @@ RSpec.describe CodebreakerWeb::WebApplication do
 
     before do
       game.difficulty.instance_variable_set(:@current_attempts, 1)
-      File.open(OVERRIDABLE_GAME_PATH, 'w') { |f| f.write game.to_yaml }
+      File.open(TEST_GAME_PATH, 'w') { |f| f.write game.to_yaml }
+      page.set_rack_session(game_path: TEST_GAME_FILE)
       visit '/game'
       fill_in('number', with: code)
       click_button I18n.t('buttons.submit')
     end
 
-    after { File.delete OVERRIDABLE_GAME_PATH }
+    after { File.delete(TEST_GAME_PATH) if File.exist?(TEST_GAME_PATH) }
 
     it "redirect to '/lose'" do
       expect(page).to have_current_path('/lose')
@@ -206,12 +213,12 @@ RSpec.describe CodebreakerWeb::WebApplication do
     end
 
     it 'show attempts left' do
-      game = YAML.load_file(OVERRIDABLE_GAME_PATH)
+      game = YAML.load_file(TEST_GAME_PATH)
       expect(page).to have_content "#{game.difficulty.current_attempts}/#{game.difficulty.attempts}"
     end
 
     it 'show hints left' do
-      game = YAML.load_file(OVERRIDABLE_GAME_PATH)
+      game = YAML.load_file(TEST_GAME_PATH)
       expect(page).to have_content "#{game.difficulty.current_hints}/#{game.difficulty.hints}"
     end
 
@@ -226,19 +233,27 @@ RSpec.describe CodebreakerWeb::WebApplication do
     it 'has statistics link' do
       expect(page).to have_link I18n.t('links.statistics')
     end
+
+    context 'when click statistics link' do
+      it 'remove game file' do
+        click_link I18n.t('links.statistics')
+        expect(File.exist?(TEST_GAME_PATH)).to eq false
+      end
+    end
   end
 
   context 'when win the game' do
     let(:success_code) { game.secret_code.join }
 
     before do
-      File.open(OVERRIDABLE_GAME_PATH, 'w') { |f| f.write game.to_yaml }
+      File.open(TEST_GAME_PATH, 'w') { |f| f.write game.to_yaml }
+      page.set_rack_session(game_path: TEST_GAME_FILE)
       visit '/game'
       fill_in('number', with: success_code)
       click_button I18n.t('buttons.submit')
     end
 
-    after { File.delete OVERRIDABLE_GAME_PATH }
+    after { File.delete TEST_GAME_PATH }
 
     it "redirect to '/win'" do
       expect(page).to have_current_path('/win')
@@ -265,12 +280,12 @@ RSpec.describe CodebreakerWeb::WebApplication do
     end
 
     it 'show attempts left' do
-      game = YAML.load_file(OVERRIDABLE_GAME_PATH)
+      game = YAML.load_file(TEST_GAME_PATH)
       expect(page).to have_content "#{game.difficulty.current_attempts}/#{game.difficulty.attempts}"
     end
 
     it 'show hints left' do
-      game = YAML.load_file(OVERRIDABLE_GAME_PATH)
+      game = YAML.load_file(TEST_GAME_PATH)
       expect(page).to have_content "#{game.difficulty.current_hints}/#{game.difficulty.hints}"
     end
 
@@ -287,14 +302,15 @@ RSpec.describe CodebreakerWeb::WebApplication do
     let(:success_code) { game.secret_code.join }
 
     before do
-      File.open(OVERRIDABLE_GAME_PATH, 'w') { |f| f.write game.to_yaml }
+      File.open(TEST_GAME_PATH, 'w') { |f| f.write game.to_yaml }
+      page.set_rack_session(game_path: TEST_GAME_FILE)
       visit '/game'
       fill_in('number', with: success_code)
       click_button I18n.t('buttons.submit')
       click_link I18n.t('links.play_again')
     end
 
-    after { File.delete OVERRIDABLE_GAME_PATH }
+    after { File.delete TEST_GAME_PATH }
 
     it 'returns the status 200' do
       expect(status_code).to be 200

@@ -6,6 +6,8 @@ require 'erb'
 require 'yaml'
 require 'tilt'
 require 'delegate'
+require 'rack'
+require 'rack_session_access'
 require 'codebreaker'
 
 require_relative 'config/i18n'

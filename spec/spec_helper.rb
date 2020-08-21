@@ -6,8 +6,8 @@ SimpleCov.minimum_coverage 90
 
 require_relative '../autoload.rb'
 require 'rack/test'
-require 'rack'
 require 'capybara/rspec'
+require 'rack_session_access/capybara'
 
 Capybara.app = Rack::Builder.parse_file('config.ru').first
 

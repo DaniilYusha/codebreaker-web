@@ -1,6 +1,6 @@
 .history
 .DS_Store
 coverage
-app/db/statistics.yml
-app/db/game.yml
+app/db/*.yml
+spec/fixtures/*.yml
 node_modules
