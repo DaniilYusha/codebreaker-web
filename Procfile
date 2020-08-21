@@ -1,1 +1,1 @@
-web: bundle install
+web: bundle install --without test
