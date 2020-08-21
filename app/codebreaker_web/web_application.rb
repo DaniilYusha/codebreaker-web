@@ -118,7 +118,7 @@ module CodebreakerWeb
     end
 
     def template_path(template)
-      File.expand_path("../../views/#{template}.html.erb", __FILE__)
+      File.expand_path("../../../views/#{template}.html.erb", __FILE__)
     end
 
     def redirect(path)
