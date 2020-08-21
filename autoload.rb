@@ -7,7 +7,9 @@ require 'yaml'
 require 'tilt'
 require 'delegate'
 require 'rack'
-require 'rack_session_access'
+
+require 'rack_session_access' unless ENV.fetch('RACK_ENV', 'development') == 'production'
+
 require 'codebreaker'
 
 require_relative 'config/i18n'
