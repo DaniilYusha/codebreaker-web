@@ -45,7 +45,7 @@ en:
     level: 'Level'
     attempts_left: 'Attempts Left'
     hints_left: 'Hints Left'
-    date: 'Data'
+    date: 'Date'
   no_stats: 'There are no winners yet! Be the first!'
   greeting: "Hello, %{name}! Try to guess 4-digit number, that consists of numbers in a range from 1 to 6."
   level: 'Level:'
