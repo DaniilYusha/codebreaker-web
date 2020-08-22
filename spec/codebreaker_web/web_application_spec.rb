@@ -165,6 +165,10 @@ RSpec.describe CodebreakerWeb::WebApplication do
       it 'change attempts count by 1' do
         expect(page).to have_content(difficulty.current_attempts - 1)
       end
+
+      it 'check result of code input' do
+        expect(page.get_rack_session['result']).to eq game.check_attempt(code)
+      end
     end
 
     context 'with take hint' do
