@@ -4,9 +4,7 @@ module CodebreakerWeb
     FILE_PATH = './app/db/statistics.yml'.freeze
 
     def load_game(filename)
-      return nil if filename.nil?
-
-      YAML.load_file(path_to_game(filename))
+      filename.nil? || !File.exist?(path_to_game(filename)) ? nil : YAML.load_file(path_to_game(filename))
     end
 
     def save_game(game, filename)

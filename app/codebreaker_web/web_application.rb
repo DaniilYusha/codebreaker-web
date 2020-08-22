@@ -40,6 +40,7 @@ module CodebreakerWeb
     def menu
       return redirect '/game' if game_present? @game_path
 
+      session_die
       send_respond 'menu', difficulties: Codebreaker::Difficulty::DIFFICULTIES_LIST
     end
 
