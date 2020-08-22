@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/DaniilYusha/codebreaker
-  revision: 78293abeb267a945ea529949780be5d762e42aa6
+  revision: a5a72829379db9220777da2c933380560fe4d834
   branch: development
   specs:
     codebreaker (0.1.3)

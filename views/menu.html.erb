@@ -35,9 +35,9 @@
                 <label for="level" class="lead label"><%= I18n.t :difficulty_label %></label>
                 <select class="custom-select" name="level" required="">
                   <option value=""><%= I18n.t :choose_level %></option>
-                  <option value="easy"><%= I18n.t('levels.easy') %></option>
-                  <option value="medium"><%= I18n.t('levels.medium') %></option>
-                  <option value="hell"><%= I18n.t('levels.hell') %></option>
+                  <% difficulties.keys.each do |name| %>
+                    <option value=<%= name %>><%= "#{name.capitalize} - #{I18n.t(:attempts)} #{difficulties[name][:attempts]} - #{I18n.t(:hints)} #{difficulties[name][:hints]}" %></option>
+                  <% end %>
                 </select>
               </div>
 

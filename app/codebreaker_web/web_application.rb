@@ -40,7 +40,7 @@ module CodebreakerWeb
     def menu
       return redirect '/game' if game_present? @game_path
 
-      send_respond 'menu'
+      send_respond 'menu', difficulties: Codebreaker::Difficulty::DIFFICULTIES_LIST
     end
 
     def registrate_game
@@ -111,20 +111,16 @@ module CodebreakerWeb
       redirect '/game'
     end
 
-    def send_respond(view, **args)
-      Rack::Response.new(render(view, **args))
+    def get_param(param)
+      @request.params[param]
     end
 
-    def render(template, **args)
-      Tilt.new(template_path(template)).render(Object.new, **args)
+    def session_die
+      @request.session.clear
     end
 
-    def template_path(template)
-      File.expand_path("../../../views/#{template}.html.erb", __FILE__)
-    end
-
-    def redirect(path)
-      Rack::Response.new { |response| response.redirect(path) }
+    def session_param(param)
+      @request.session[param]
     end
   end
 end

@@ -45,7 +45,7 @@
                       <td><%= user[:difficulty] %></td>
                       <td><%= user[:attempts_total] - user[:attempts_used] %>/<%= user[:attempts_total] %></td>
                       <td><%= user[:hints_total] - user[:hints_used] %>/<%= user[:hints_total] %></td>
-                      <td><%= user[:date] %></td>
+                      <td><%= user[:date].strftime('%Y-%m-%d - %H:%M:%S') %></td>
                     </tr>
                   <% end %>
                 <% else %>

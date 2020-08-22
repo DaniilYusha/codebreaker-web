@@ -141,44 +141,42 @@ RSpec.describe CodebreakerWeb::WebApplication do
     end
   end
 
-  context 'when input code' do
-    let(:code) { '6543' }
-
+  context 'when in game' do
     before do
       File.open(TEST_GAME_PATH, 'w') { |f| f.write game.to_yaml }
       page.set_rack_session(game_path: TEST_GAME_FILE)
       visit '/game'
-      fill_in('number', with: code)
-      click_button I18n.t('buttons.submit')
     end
 
     after { File.delete TEST_GAME_PATH }
 
-    it 'returns 200 code page' do
-      expect(status_code).to be 200
+    context 'with input code' do
+      let(:code) { '6543' }
+
+      before do
+        fill_in('number', with: code)
+        click_button I18n.t('buttons.submit')
+      end
+
+      it 'returns 200 code page' do
+        expect(status_code).to be 200
+      end
+
+      it 'change attempts count by 1' do
+        expect(page).to have_content(difficulty.current_attempts - 1)
+      end
     end
 
-    it 'change attempts count by 1' do
-      expect(page).to have_content(difficulty.current_attempts - 1)
-    end
-  end
+    context 'with take hint' do
+      before { click_link I18n.t('links.hint') }
 
-  context 'when take hint' do
-    before do
-      File.open(TEST_GAME_PATH, 'w') { |f| f.write game.to_yaml }
-      page.set_rack_session(game_path: TEST_GAME_FILE)
-      visit '/game'
-      click_link I18n.t('links.hint')
-    end
+      it 'returns the status 200' do
+        expect(status_code).to be 200
+      end
 
-    after { File.delete TEST_GAME_PATH }
-
-    it 'returns the status 200' do
-      expect(status_code).to be 200
-    end
-
-    it 'change honts count by 1' do
-      expect(page).to have_content(difficulty.current_hints - 1)
+      it 'change honts count by 1' do
+        expect(page).to have_content(difficulty.current_hints - 1)
+      end
     end
   end
 
