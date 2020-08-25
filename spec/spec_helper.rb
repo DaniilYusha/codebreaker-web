@@ -4,7 +4,7 @@ require 'simplecov'
 SimpleCov.start
 SimpleCov.minimum_coverage 90
 
-require_relative '../autoload.rb'
+require './autoload.rb'
 require 'rack/test'
 require 'capybara/rspec'
 require 'rack_session_access/capybara'

@@ -1,5 +1,3 @@
-require_relative '../spec_helper'
-
 RSpec.describe CodebreakerWeb::WebApplication do
   let(:app) { Rack::Builder.parse_file('config.ru').first }
   let(:user) { Codebreaker::User.new 'Yusha' }
