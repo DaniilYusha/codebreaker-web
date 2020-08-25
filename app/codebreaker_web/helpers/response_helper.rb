@@ -1,5 +1,5 @@
 module CodebreakerWeb
-  module DataManagementHelper
+  module ResponseHelper
     def send_respond(view, **args)
       Rack::Response.new(render(view, **args))
     end

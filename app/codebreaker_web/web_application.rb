@@ -1,6 +1,6 @@
 module CodebreakerWeb
   class WebApplication
-    include DataManagementHelper
+    include ResponseHelper
     include GameStorageHepler
 
     attr_reader :statistics
