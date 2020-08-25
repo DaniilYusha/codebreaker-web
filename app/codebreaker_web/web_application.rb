@@ -3,8 +3,6 @@ module CodebreakerWeb
     include ResponseHelper
     include GameStorageHepler
 
-    attr_reader :statistics
-
     ACTIONS = {
       '/' => :menu,
       '/registration' => :registrate_game,
@@ -89,7 +87,7 @@ module CodebreakerWeb
       return redirect '/' unless game_present? @game_path
       return redirect '/game' unless @game.win? @request.session[:number]
 
-      statistics.store @game
+      @statistics.store @game
       send_respond 'win', game: @game
     end
 
@@ -102,7 +100,7 @@ module CodebreakerWeb
     def show_statistics
       clear_data(@game_path) if @game&.lose? || @game&.win?(@request.session[:number])
 
-      send_respond 'statistics', statistics: statistics.load
+      send_respond 'statistics', statistics: @statistics.load
     end
 
     def play_again
