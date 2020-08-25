@@ -7,6 +7,7 @@ require 'yaml'
 require 'tilt'
 require 'delegate'
 require 'rack'
+require 'securerandom'
 
 require 'rack_session_access' unless ENV.fetch('RACK_ENV', 'development') == 'production'
 

@@ -2,6 +2,8 @@ module CodebreakerWeb
   module GameStorageHepler
     DIRECTORY_PATH = './app/db'.freeze
     FILE_PATH = './app/db/statistics.yml'.freeze
+    GAME_FILE_PREFIX = 'game-'.freeze
+    GAME_FILE_EXTENSION = '.yml'.freeze
 
     def load_game(filename)
       filename.nil? || !File.exist?(path_to_game(filename)) ? nil : YAML.load_file(path_to_game(filename))
@@ -12,7 +14,7 @@ module CodebreakerWeb
     end
 
     def generate_file_name
-      "game_#{8.times.map { rand(10) }.join}.yml"
+      GAME_FILE_PREFIX + SecureRandom.uuid + GAME_FILE_EXTENSION
     end
 
     def remove_game(filename)
