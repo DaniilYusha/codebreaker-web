@@ -1,2 +1,6 @@
 .history
 .DS_Store
+coverage
+app/db/*.yml
+spec/fixtures/*.yml
+node_modules

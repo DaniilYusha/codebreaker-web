@@ -1,0 +1,70 @@
+version: 2.1
+
+executors:
+  default:
+    working_directory: ~/repo
+    description: CodebreakerWeb
+    docker:
+      - image: circleci/ruby:2.7.1
+
+caches:
+  - &bundle_cache_full v1-refactoring_example-{{ checksum "Gemfile.lock" }}
+  - &bundle_cache v1-refactoring_example
+
+commands:
+  setup_environment:
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - *bundle_cache_full
+            - *bundle_cache
+      - run: bundle install --path vendor/bundle
+      - save_cache:
+          paths:
+            - vendor/bundle
+          key: *bundle_cache_full
+  run_linters:
+    description: command to start linters
+    steps:
+      - run:
+          name: rubocop
+          command: bundle exec rubocop
+      - run:
+          name: fasterer
+          command: bundle exec fasterer
+  run_specs:
+    description: command to run specs
+    steps:
+      - run:
+          name: run specs
+          command: |
+            mkdir /tmp/test-results
+            TEST_FILES="$(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)"
+            bundle exec rspec --format progress \
+                                  --out /tmp/test-results/rspec.xml \
+                                  $TEST_FILES
+      - store_artifacts:
+          path: ~/repo/coverage
+          destination: coverage
+
+jobs:
+  lintering:
+    executor: default
+    steps:
+      - setup_environment
+      - run_linters
+  run_specs:
+    executor: default
+    steps:
+      - setup_environment
+      - run_specs
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - lintering
+      - run_specs:
+          requires:
+            - lintering

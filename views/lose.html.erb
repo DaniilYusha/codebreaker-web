@@ -7,7 +7,7 @@
 <link href="assets/css/styles.css" rel="stylesheet">
 <script src="assets/js/jquery.min.js"></script>
 <script src="assets/js/bootstrap.min.js"></script>
-<title>Codebreaker Web</title>
+<title><%= I18n.t :page_title %></title>
 
 <body>
   <section id="introduction">
@@ -16,27 +16,27 @@
         <div class="col-12 col-md-6">
           <div class="row">
             <div class="col-md-auto">
-              <h1 class="text-white title inline-block">Codebreaker 2018</h1>
+              <h1 class="text-white title inline-block"><%= I18n.t :page_title %></h1>
             </div>
           </div>
           <div class="row">
             <div class="col button">
               <button type="button" class="btn btn-primary" disabled>
-                Level:
+                <%= I18n.t :level %>
                 <span class="badge badge-light">
-                  Middle
+                  <%= game.difficulty.kind %>
                 </span>
               </button>
               <button type="button" class="btn btn-primary" disabled>
-                Attempts Left:
+                <%= I18n.t :attempts_left %>
                 <span class="badge badge-light">
-                  0/8
+                  <%= "#{game.difficulty.current_attempts}/#{game.difficulty.attempts}" %>
                 </span>
               </button>
               <button type="button" class="btn btn-primary" disabled>
-                Hints Left:
+                <%= I18n.t :hints_left %>
                 <span class="badge badge-light">
-                  1/3
+                  <%= "#{game.difficulty.current_hints}/#{game.difficulty.hints}" %>
                 </span>
               </button>
             </div>
@@ -46,22 +46,22 @@
             <div class="text-center">
               <div class="text-center">
                 <h3 class="text-white">
-                  Oops, NAME! You lose the game!
+                  <%= I18n.t :loose, name: game.user.name %>
                 </h3>
                 <h4 class="text-white">
-                  The code was
-                  <strong>1553</strong>
+                  <%= I18n.t :code %>
+                  <strong><%= game.secret_code.join %></strong>
                 </h4>
               </div>
               <img src="assets/images/lost.gif" class="img-fluid" alt="You lose the game!">
             </div>
           </div>
           <hr class="mb-4">
-          <a class="btn btn-primary btn-lg" href="#" role="button">
-            Play again!
+          <a class="btn btn-primary btn-lg" href="/play_again" role="button">
+            <%= I18n.t('links.play_again') %>
           </a>
-          <a class="btn btn-success btn-lg float-right" href="#" role="button">
-            Statistics
+          <a class="btn btn-success btn-lg float-right" href="/statistics" role="button">
+            <%= I18n.t('links.statistics') %>
           </a>
         </div>
        </div>
