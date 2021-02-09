@@ -17,6 +17,7 @@ For development:
 - **Ruby(v2.7.1)**
 - **Rack**
 - **I18n**
+- **Postrgesql 12**
 
 For testing:
 - **Rubocop**
