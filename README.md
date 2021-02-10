@@ -25,10 +25,3 @@ For testing:
 - **Simplecov**
 
 Also was used CircleCI for testing and deploying application to Heroku.
-## How to install
-
-- Clone project: **'git clone https://github.com/DaniilYusha/codebreaker-web.git'** - this command creates the book-store directory, initializes the *.git* subdirectory in it, downloads all the data for this repository and extracts a working copy of the latest version;
-
-- Move to the project thanks to **'cd'** command;
-
-- Run **'bundle install'** command in your terminal - installation of packages prescribed in *Gemfile*.
